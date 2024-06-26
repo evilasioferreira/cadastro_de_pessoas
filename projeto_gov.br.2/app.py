@@ -96,7 +96,7 @@ def excluir_beneficiarios():
     if not ids_to_delete:
         return jsonify({'message': 'Nenhum beneficiário selecionado para exclusão.'}), 400
     
-    print(f"IDs para deletar: {ids_to_delete}")  # Log para depuração
+    print(f"IDs para deletar: {ids_to_delete}")  # Log 
 
     try:
         ids_to_delete = [int(id) for id in ids_to_delete]
@@ -114,7 +114,7 @@ def excluir_beneficiarios():
                 placeholders = ', '.join(['%s'] * len(ids_to_delete))
                 query = f"DELETE FROM beneficiarios WHERE id IN ({placeholders})"
                 
-                print(f"Query: {query}")  # Log da consulta
+                print(f"Query: {query}")  # Log 
                 
                 cur.execute(query, ids_to_delete)
         
@@ -151,7 +151,7 @@ def gerar_pdf():
 
         # Adiciona a logo
         logo_path = "templates/logo_caixa.png"  # Caminho para a logo
-        im = Image(logo_path, 4*inch, 1*inch)  # Ajuste o tamanho conforme necessário
+        im = Image(logo_path, 4*inch, 1*inch)  # Tamanho
         elements.append(im)
 
         # Adiciona o título
@@ -159,7 +159,7 @@ def gerar_pdf():
         title = Paragraph("Lista de Beneficiários", styles['Title'])
         elements.append(title)
 
-        elements.append(Spacer(1, 12))  # Adiciona um espaço após o título
+        elements.append(Spacer(1, 12))  # Espaço após o título
 
         # Adiciona a tabela
         data = [['Nome', 'Email', 'Telefone', 'Endereço', 'Idade']]
