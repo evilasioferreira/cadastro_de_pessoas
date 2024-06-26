@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Beneficiários</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+  <header id="header">
+    <div class="logo">
+      <img src="/templates/logo_caixa.png" alt="Logo">
+    </div>
+    <div class="butao">
+      <a href="/templates/cadastro.html">Cadastro</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2>Lista de Beneficiários</h2>
+    <button id="consultarBtn">Consultar</button>
+    <hr>
+    <table id="beneficiariosTable">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Endereço</th>
+          <th>Idade</th>
+          <th>Selecionar</th>
+        </tr>
+        <tr>
+          <th colspan="9">
+            <hr>
+          </th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <hr>
+    <div class="btnb">
+      <button class="btnexc" id="excluirBtn" type="button">Excluir</button>
+      <button class="btnimp" id="imprimirBtn" type="button">Imprimir</button>
+    </div>
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#consultarBtn').click(function () {
+        $.ajax({
+          url: '/consulta', // Defina a rota no seu servidor Flask para a consulta
+          type: 'GET',
+          success: function (data) {
+            // Limpa a tabela antes de adicionar os dados
+            $('#beneficiariosTable tbody').empty();
+            // Adiciona os dados dos beneficiários à tabela
+            let tableContent = '';
+            data.forEach(function (beneficiario) {
+              tableContent +=
+                '<tr>' +
+                '<td>' + beneficiario.nome + '</td>' +
+                '<td>' + beneficiario.email + '</td>' +
+                '<td>' + beneficiario.telefone + '</td>' +
+                '<td>' + beneficiario.endereco + '</td>' +
+                '<td>' + beneficiario.idade + '</td>' +
+                '<td><input type="checkbox" class="selectBeneficiario" data-id="' + beneficiario.id + '"></td>' +
+                '</tr>';
+            });
+            $('#beneficiariosTable tbody').append(tableContent);
+            console.log('HTML gerado:', tableContent); // Log 
+          },
+          error: function () {
+            alert('Erro ao consultar os beneficiários.');
+          }
+        });
+      });
+
+      $('#excluirBtn').click(function () {
+        const ids_to_delete = [];
+        $('.selectBeneficiario:checked').each(function () {
+          const id = $(this).data('id');
+          console.log('Checkbox:', $(this));
+          console.log('ID capturado:', id); // Adiciona log para verificar os IDs capturados
+          if (id !== undefined) {
+            ids_to_delete.push(id);
+          }
+        });
+
+        console.log('IDs para excluir:', ids_to_delete); // Log dos IDs para excluir
+
+        if (ids_to_delete.length > 0) {
+          $.ajax({
+            url: '/excluir', // Defina a rota no seu servidor Flask para excluir
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ ids: ids_to_delete }),
+            success: function (response) {
+              alert('Beneficiário(s) excluído(s) com sucesso.');
+              $('#consultarBtn').click(); // Atualiza a lista de beneficiários
+            },
+            error: function () {
+              alert('Erro ao excluir os beneficiários.');
+            }
+          });
+        } else {
+          alert('Selecione pelo menos um beneficiário para excluir.');
+        }
+      });
+
+      $('#imprimirBtn').click(function() {
+      const ids_to_print = [];
+      $('.selectBeneficiario:checked').each(function() {
+        const id = $(this).data('id');
+        if (id !== undefined) {
+          ids_to_print.push(id);
+        }
+      });
+
+      if (ids_to_print.length > 0) {
+        $.ajax({
+          url: '/gerar_pdf', // Defina a rota no seu servidor Flask para imprimir
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ ids: ids_to_print }),
+          success: function(response) {
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(new Blob([response], { type: 'application/pdf' }));
+            link.download = 'beneficiarios.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          },
+          error: function() {
+            alert('Erro ao gerar o PDF dos beneficiários.');
+          }
+        });
+      } else {
+        alert('Selecione pelo menos um beneficiário para imprimir.');
+      }
+    });
+  });
+  </script>
+ 
+</body>
+</html>

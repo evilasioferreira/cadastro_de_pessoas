@@ -1,0 +1,78 @@
+/* Adicione seus estilos aqui */
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+      }
+  
+
+#header {  
+  border-bottom: red solid;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+
+  .logo {
+   
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+  .butao{
+    margin-top: 20px;
+    margin-right: 100px;
+       
+    }
+
+  .btnb {
+    display: flex;
+    justify-content: space-between;
+
+  }
+  .btnexc {
+    background-color: rgb(214, 93, 93, 0.541);
+  }
+  .btnexc:hover {
+    background-color: rgba(214, 93, 93);
+  }
+
+  .btnimp {
+    background-color: rgb(53,23,231);
+  }
+  .btnimp:hover {
+    background-color: rgba(52, 12, 231, 0.589);
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
